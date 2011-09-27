@@ -4,46 +4,67 @@ $(document).ready(function(){
 
     //UI Elements 
     
+    $("#datatable").dataTable({
+        "bJQueryUI": true,
+        "bSort": false,
+        "sPaginationType": "full_numbers",
+        "iDisplayLength": 5,
+        "aLengthMenu": [[5, 10, 20, 50, -1], [5, 10, 20, 50, "All"]],
+        "sDom": '<"H"fp>t<"F"irl>'
+    });
+    
+    
+    
+    $(".tblMap").dataTable({
+        "bJQueryUI": true,
+        "bSort": false,
+        "sDom": '<"H"f>t<"F"ir>'
+    });
+    
+    //Modal Load
+    $("#btnUpload").click(function(){
+        $("#loadModal").show();
+    });
     
     //Buttons 
-   
- 	
-	$('.errorText').live('click', function() {
-  		$(".dr").children().removeClass("invalidDR");
-	var span = "#dr" + $(this).children("span").text()
-		
-	
-
-		$('.tblPreview').scrollTo( $(span), 400 );
-		
-		$(span).children().addClass("invalidDR");
-		
-});
-	
-	
-
-	
-	
-	$("#vMax").buttonset();
-	$("#fOp").buttonset();
-	$(".ccb").button();
-	
-	$(".ccb").click(function(){
-		
-		    if ($(this).prop("checked")) {
+    
+    
+    $('.errorText').live('click', function(){
+        $(".dr").children().removeClass("invalidDR");
+        var span = "#dr" + $(this).children("span").text()
+        
+        
+        
+        $('.tblPreview').scrollTo($(span), 400);
+        
+        $(span).children().addClass("invalidDR");
+        
+    });
+    
+    
+    
+    
+    
+    $("#vMax").buttonset();
+    $("#fOp").buttonset();
+    $(".ccb").button();
+    
+    $(".ccb").click(function(){
+    
+        if ($(this).prop("checked")) {
+        
+            $(this).button("option", "label", "Enabled");
             
-                $(this).button( "option", "label", "Enabled" );
-
-                
-            }
-            else {
             
-                 $(this).button( "option", "label", "Disabled" );
-
-            }
-		
-	});
-
+        }
+        else {
+        
+            $(this).button("option", "label", "Disabled");
+            
+        }
+        
+    });
+    
     $('[id^="btn"]').button();
     
     $('#btnBack').button({
@@ -71,8 +92,8 @@ $(document).ready(function(){
         }
     });
     
-	
-	$('#btnValData').button({
+    
+    $('#btnValData').button({
         icons: {
             primary: 'ui-icon-check'
         }
@@ -90,24 +111,24 @@ $(document).ready(function(){
         }
     });
     
-  
     
     
-      $(".btnDownload").button({
+    
+    $(".btnDownload").button({
         icons: {
             primary: 'ui-icon-circle-arrow-s'
         }
     });
-	
-	
-	      $(".btnDownloadArc").button({
+    
+    
+    $(".btnDownloadArc").button({
         icons: {
             primary: 'ui-icon-circle-arrow-s'
         }
     });
-	
-	
-		 $('#btnPost').button({
+    
+    
+    $('#btnPost').button({
         icons: {
             primary: 'ui-icon-mail-closed'
         }
@@ -118,16 +139,14 @@ $(document).ready(function(){
     $('#btnBack').click(function(){
         history.go(-1);
     });
-	
-	
-	$("#optionForm").validateMyForm({
+    
+    
+    $("#optionForm").validateMyForm({
         form: '#optionForm',
         daysFirst: true
     });
     
-    $('#btnContinue').click(function(){
-        $('#optionForm').submit();
-    });
+    
     
     $('#btnUpload').click(function(){
         $('#uploadForm').submit();
@@ -140,9 +159,9 @@ $(document).ready(function(){
         document.location = $(this).children("span").children("a").attr("href");
         
     });
-	
-	
-	    $(".btnDownloadArc").click(function(){
+    
+    
+    $(".btnDownloadArc").click(function(){
     
     
         document.location = $(this).children("span").children("a").attr("href");
@@ -161,20 +180,20 @@ $(document).ready(function(){
         
     });
     
-	
+    
     
     $("#mVer7").click(function(){
     
         $("#m6").hide();
         $("#m7").show();
         
-		
-		 $("#m6IntObj").removeClass("required");
-		 $("#m6InInt").removeClass("required");
-		  $("#m6ExtSys").removeClass("required");
         
-		 $("#mObjStruct").addClass("required");
-		  $("#mPubChan").addClass("required");
+        $("#m6IntObj").removeClass("required");
+        $("#m6InInt").removeClass("required");
+        $("#m6ExtSys").removeClass("required");
+        
+        $("#mObjStruct").addClass("required");
+        $("#mPubChan").addClass("required");
         
     });
     
@@ -182,16 +201,16 @@ $(document).ready(function(){
     
         $("#m7").hide();
         $("#m6").show();
-		
-		
-		 $("#mObjStruct").removeClass("required");
-		  $("#mPubChan").removeClass("required");
-	
-		
-		 $("#m6IntObj").addClass("required");
-		 $("#m6InInt").addClass("required");
-		  $("#m6ExtSys").addClass("required");
-
+        
+        
+        $("#mObjStruct").removeClass("required");
+        $("#mPubChan").removeClass("required");
+        
+        
+        $("#m6IntObj").addClass("required");
+        $("#m6InInt").addClass("required");
+        $("#m6ExtSys").addClass("required");
+        
         
     });
     
@@ -200,7 +219,7 @@ $(document).ready(function(){
         $('.fne').each(function(){
         
             $(this).prop("checked", true);
-
+            
             
         });
         
@@ -212,7 +231,7 @@ $(document).ready(function(){
         $('.fne').each(function(){
         
             $(this).prop("checked", false);
-
+            
             
         });
         
@@ -227,13 +246,13 @@ $(document).ready(function(){
             if ($(this).prop("checked")) {
             
                 $(this).prop("checked", false);
-
+                
                 
             }
             else {
             
-                 $(this).prop("checked", true);
-
+                $(this).prop("checked", true);
+                
             }
         });
         
@@ -242,28 +261,29 @@ $(document).ready(function(){
     });
     
     
-	
-	
+    
+    
 });
 
 
 
-function info(msg,error){
-		
-		$('#infoMsg').text(msg);
-		
-		if(error == false){
-			
-			$('#infoImg').removeClass('notvalid');
-			$('#infoImg').addClass('valid');
-			
-		}else{
-			$('#infoImg').removeClass('valid');
-			$('#infoImg').addClass('notvalid');
-			
-		}
-		
-		$('#infoBar').fadeIn(700).delay(3000).slideUp("slow");
-		
-	
-	}
+function info(msg, error){
+
+    $('#infoMsg').text(msg);
+    
+    if (error == false) {
+    
+        $('#infoImg').removeClass('notvalid');
+        $('#infoImg').addClass('valid');
+        
+    }
+    else {
+        $('#infoImg').removeClass('valid');
+        $('#infoImg').addClass('notvalid');
+        
+    }
+    
+    $('#infoBar').fadeIn(700).delay(3000).slideUp("slow");
+    
+    
+}

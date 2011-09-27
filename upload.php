@@ -31,7 +31,7 @@ if ($_FILES['userfile']['error'] > 0)
 
 
 $upfile = $_FILES['userfile']['tmp_name'];
-
+$_SESSION['filename'] = $_FILES['userfile']['name'];
 
 if (($handle = fopen($upfile, "r")) !== FALSE) {
 

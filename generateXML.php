@@ -3,6 +3,8 @@ session_start();
 
 include_once('header.inc');
 
+date_default_timezone_set('Europe/London');
+
 ?>
 <div class="row">
 
@@ -16,10 +18,9 @@ include_once('header.inc');
 
 </div>
 
-<div class="row"><div class="column grid_4"><fieldset>
-<legend>Download Files</legend>
-
-<?php
+<div class="row">
+<div class="column grid_4">
+<fieldset><legend>Download Files</legend> <?php
 
 //Functions
 
@@ -112,7 +113,7 @@ for($n=0; $n < $fieldCount; $n++){
 			
 		$enFields[$enFieldsID][0] = $n;
 
-
+		//Populate Owner Table 
 		$fname = "owntbl".$n;
 
 		if ($_POST[$fname] !== ""){
@@ -125,7 +126,9 @@ for($n=0; $n < $fieldCount; $n++){
 
 		}
 
-
+		//Populate Data Type
+		$fname = "fdt".$n;
+		$enFields[$enFieldsID][2] = $_POST[$fname];
 
 		$enFieldsID++;
 			
@@ -155,9 +158,9 @@ $glCount =count($glFields);
 
 //Sort Enables Fields Array
 
-
-
 usort($enFields, 'compare');
+
+
 
 //Create 6 Script
 
@@ -235,80 +238,95 @@ while($loading == true){
 
 		}
 
-		
-	if($mVer == '7'){
 
-	$XMLcontent.=	"<".$defOwner." action=\"".$mOp."\">\n";
-		
+		if($mVer == '7'){
 
-	}else{
+			$XMLcontent.=	"<".$defOwner." action=\"".$mOp."\">\n";
 
-		$XMLcontent.= "<".$m6IntObj.">\n\t";
-		$XMLcontent.=	"<".$defOwner." action=\"".$mOp."\">\n";
 
-	}
-		
-		
+		}else{
+
+			$XMLcontent.= "<".$m6IntObj.">\n\t";
+			$XMLcontent.=	"<".$defOwner." action=\"".$mOp."\">\n";
+
+		}
+
+
 
 
 		for($r=0; $r<$fieldCount; $r++){
 
-			
+				//Convert Dates
+
+				
+
+				if($enFields[$r][2] == "DATETIME" || $enFields[$r][2] == "DATE" ){
+
+					for($d=1;$d<=$recCount;$d++){
+						
+						if($recArray[$d][$enFields[$r][0]] !==""){
+						
+						$recArray[$d][$enFields[$r][0]] = date(DATE_W3C, strtotime(str_replace('/','-',$recArray[$d][$enFields[$r][0]])));
+						
+						}
+					}
+
+				}
 			//Remove Tag if Null Value
 			if($oprnt == "on" && $recArray[$i][$enFields[$r][0]] == ""){
-				
-				
-				
-			}else{
-				
-			if($defOwner !== $enFields[$r][1]){
-					
-					
-				if($enFields[$r][1] !== $enFields[$r-1][1]){
 
-					$XMLcontent.= "\t<".$enFields[$r][1].">\n";
+
+
+			}else{
+
+				if($defOwner !== $enFields[$r][1]){
+
+
+					if($enFields[$r][1] !== $enFields[$r-1][1]){
+
+						$XMLcontent.= "\t<".$enFields[$r][1].">\n";
+
+					}
+
+
+
+					$XMLcontent.="\t\t<".$recArray[0][$enFields[$r][0]].">".$recArray[$i][$enFields[$r][0]]. "</".$recArray[0][$enFields[$r][0]].">\n";
+
+
+					if($enFields[$r][1] !== $enFields[$r+1][1]){
+
+						$XMLcontent.= "\t</".$enFields[$r][1].">\n";
+
+					}
+
+
+
+
+				}else{
+
+					//Format Fields
+					$XMLcontent.="\t\t<".$recArray[0][$enFields[$r][0]].">".$recArray[$i][$enFields[$r][0]]. "</".$recArray[0][$enFields[$r][0]].">\n";
 
 				}
 					
 					
-					
-				$XMLcontent.="\t\t<".$recArray[0][$enFields[$r][0]].">".$recArray[$i][$enFields[$r][0]]. "</".$recArray[0][$enFields[$r][0]].">\n";
-					
-					
-				if($enFields[$r][1] !== $enFields[$r+1][1]){
-
-					$XMLcontent.= "\t</".$enFields[$r][1].">\n";
-
-				}
-					
-					
-					
-					
-			}else{
-
-				//Format Fields
-				$XMLcontent.="\t\t<".$recArray[0][$enFields[$r][0]].">".$recArray[$i][$enFields[$r][0]]. "</".$recArray[0][$enFields[$r][0]].">\n";
-
 			}
-			
-			
-		}
 			$rStart=$i+1;
 		}
 
-		
+
 		if($mVer == '7'){
 
-$XMLcontent.= "\t</".$defOwner.">\n";
-		
+			$XMLcontent.= "\t</".$defOwner.">\n";
 
-	}else{
 
-		$XMLcontent.= "\t</".$defOwner.">\n</".$m6IntObj.">\n";
+		}else{
 
-	}
-		
-		
+			$XMLcontent.= "\t</".$defOwner.">\n</".$m6IntObj.">\n";
+
+		}
+
+
 
 
 	}
@@ -424,8 +442,7 @@ echo '</fieldset></div><div class="column grid_4">
 
 //Write Text Area
 
-?>
-</fieldset>
+?></fieldset>
 </div>
 <div class="column grid_4">
 <fieldset><legend>Post To Server</legend>
@@ -445,7 +462,8 @@ echo '</fieldset></div><div class="column grid_4">
 
 
 
-<div title="Post Status" id="msgPostStat"></div>
+<div title="Post Status"
+	id="msgPostStat"></div>
 
 
 <?php

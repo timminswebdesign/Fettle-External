@@ -17,6 +17,19 @@
   })();
 
 </script> 
+
+
+
+<div id="loadModal">
+<div class="text">
+<img src="images/bigload.gif" alt="loading" />
+<br/>
+This may take a while depending on the size of the file.
+</div>
+
+</div> 
+
+
 </div>
     </body>
 </html>

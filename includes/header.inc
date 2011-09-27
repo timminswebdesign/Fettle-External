@@ -43,6 +43,9 @@ switch ($page){
         <script type="text/javascript" src="script/jquery.validateMyForm.1.5.min.js">
         </script>
         
+                <script type="text/javascript" src="script/jquery.dataTables.min.js">
+        </script>
+        
 <script type="text/javascript" src="script/autocomplete.js"></script>
 <script type="text/javascript" src="script/script.js">
         </script>

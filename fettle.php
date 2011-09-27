@@ -13,29 +13,31 @@ include_once('header.inc');
 <div class="column grid_12">
 
 
-<fieldset><legend>Data</legend>
+
 
 
 <div class='tblPreview'>
 
-<table>
+<table id="datatable">
+
+	<thead>
+		<tr class='trTitle'>
 
 
-	<tr class='trTitle'>
 
+		<?php
 
+		for($t=0; $t<$fieldCount; $t++){
 
-	<?php
+			echo "<th>".$recArray[0][$t]."</th>";
 
-	for($t=0; $t<$fieldCount; $t++){
+		}
+		?>
 
-		echo "<td>".$recArray[0][$t]."</td>";
-
-	}
-
-	echo "</tr>";
-
-	//Preview Data Table Body
+		</tr>
+	</thead>
+	<tbody>
+	<?php //Preview Data Table Body
 
 	for($i=1; $i<$recCount; $i++){
 
@@ -52,11 +54,11 @@ include_once('header.inc');
 	}
 
 	?>
-
+	</tbody>
 </table>
 
 </div>
-</fieldset>
+
 </div>
 </div>
 
@@ -79,25 +81,26 @@ include_once('header.inc');
 <div class="column grid_12">
 
 
-<fieldset><legend>Mappings</legend>
+
 
 
 
 
 <table class='tblMap'>
-
-	<tr class="trTitle">
-		<td>Valid</td>
-		<td>Owner Table</td>
-		<td>Original Name</td>
-		<td>New Name</td>
-		<td>Data Type</td>
-		<td>Length</td>
-		<td>Required</td>
-		<td>Enabled?</td>
-		<td>Is GL?</td>
-	</tr>
-
+	<thead>
+		<tr class="trTitle">
+			<th>Valid</th>
+			<th>Owner Table</th>
+			<th>Original Name</th>
+			<th>New Name</th>
+			<th>Data Type</th>
+			<th>Length</th>
+			<th>Required</th>
+			<th>Enabled?</th>
+			<th>Is GL?</th>
+		</tr>
+	</thead>
+	<tbody>
 	<?php
 	for($t=0; $t<$fieldCount; $t++){
 
@@ -117,7 +120,7 @@ include_once('header.inc');
 	}
 
 	?>
-
+</tbody>
 </table>
 
 <div style="text-align: right; margin-top: 5px;">
@@ -128,8 +131,6 @@ include_once('header.inc');
 
 </div>
 
-
-</fieldset>
 </div>
 </div>
 
@@ -202,7 +203,7 @@ Owner Table:</label> <input name="defOwner" id="defOwner"
 
 
 <div class="row">
-<div class="column grid_6" style="min-height:180px";>
+<div class="column grid_6" style="min-height: 180px";>
 
 <div id='m6'>
 <fieldset><legend>Maximo 6 Options</legend>
@@ -253,7 +254,8 @@ Owner Table:</label> <input name="defOwner" id="defOwner"
 
 <ul class="proplist">
 	<li><label class="pll" for="opfn">File Name Prefix:</label><input
-		id="opfn" name="opfn" type="text" class="required" /></li>
+		id="opfn" name="opfn" type="text" class="required"
+		value="<?php echo $_SESSION['filename'];?>" /></li>
 	<li><label class="pll">Split File?</label><label for="opse">Disabled</label><input
 		class="ccb" id="opse" name="opse" type="checkbox" /></li>
 	<li><label class="pll" for="opsn">Split Amount:</label><input id="opsn"

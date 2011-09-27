@@ -566,3 +566,61 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  */
 .ui-progressbar { height:2em; text-align: left; }
 .ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
+
+
+
+/*
+ * Data Tables Styling
+ */
+
+.paging_two_button .ui-button {
+    float: left;
+    cursor: pointer;
+    * cursor: hand;
+}
+
+.paging_full_numbers .ui-button {
+    padding: 2px 6px;
+    margin: 0;
+    cursor: pointer;
+    * cursor: hand;
+}
+
+.dataTables_paginate .ui-button {
+    margin-right: -0.1em !important;
+}
+
+.paging_full_numbers {
+    width: 350px !important;
+}
+
+.dataTables_wrapper .ui-toolbar {
+    padding: 5px;
+}
+
+.dataTables_paginate {
+	float:right;
+    width: auto;
+}
+
+.dataTables_info {
+	float:left;
+    padding-top: 3px;
+}
+
+.dataTables_length{
+	float:right;
+}
+
+.dataTables_filter{
+	float:left;
+}
+table.display thead th {
+    padding: 3px 0px 3px 10px;
+    cursor: pointer;
+    * cursor: hand;
+}
+
+div.dataTables_wrapper .ui-widget-header {
+    font-weight: normal;
+}

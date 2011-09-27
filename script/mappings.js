@@ -168,8 +168,7 @@ $(document).ready(function(){
                     else {
                         $(currec).children("td").children('.fngl').prop("checked", false);
                     }
-                    
-                    
+                                        
                     
                 });
                 
