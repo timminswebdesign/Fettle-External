@@ -75,7 +75,7 @@ include_once('header.inc');
 </div>
 
 
-<form id="optionForm" action="generateXML.php" method="post"
+<form id="optionForm" action="generation.php" method="post"
 	accept-charset="utf-8">
 <div class="row">
 <div class="column grid_12">
@@ -120,7 +120,7 @@ include_once('header.inc');
 	}
 
 	?>
-</tbody>
+	</tbody>
 </table>
 
 <div style="text-align: right; margin-top: 5px;">

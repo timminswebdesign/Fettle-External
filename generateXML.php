@@ -1,26 +1,7 @@
 <?php
 session_start();
 
-include_once('header.inc');
-
 date_default_timezone_set('Europe/London');
-
-?>
-<div class="row">
-
-<div class="column grid_12">
-
-
-<div id="btnBack">Back</div>
-
-
-</div>
-
-</div>
-
-<div class="row">
-<div class="column grid_4">
-<fieldset><legend>Download Files</legend> <?php
 
 //Functions
 
@@ -62,29 +43,30 @@ function compare($x, $y) {
 }
 
 
+
 $recArray =  $_SESSION['recArray'];
-$mVer = $_POST['mVer'];
-$mOp  = $_POST['mOp'];
-$defOwner = $_POST['defOwner'];
+$mVer = $_SESSION['mVer'];
+$mOp  = $_SESSION['mOp'];
+$defOwner = $_SESSION['defOwner'];
 
 //Maximo 7
 
-$mPubChan = $_POST['mPubChan'];
-$mObjStruct = $_POST['mObjStruct'];
+$mPubChan = $_SESSION['mPubChan'];
+$mObjStruct = $_SESSION['mObjStruct'];
 
 
 
 //Maximo 6
 
-$m6IntObj = $_POST['m6IntObj'];
-$m6InInt = $_POST['m6InInt'];
-$m6ExtSys = $_POST['m6ExtSys'];
+$m6IntObj = $_SESSION['m6IntObj'];
+$m6InInt = $_SESSION['m6InInt'];
+$m6ExtSys = $_SESSION['m6ExtSys'];
 
 //File Options
 
-$opfn = $_POST['opfn'];
-$opsn = $_POST['opsn'];
-$oprnt = $_POST['oprnt'];
+$opfn = $_SESSION['opfn'];
+$opsn = $_SESSION['opsn'];
+$oprnt = $_SESSION['oprnt'];
 $recCount = $_SESSION['recCount'];
 $fieldCount = $_SESSION['fieldCount'];
 $XMLcontent = "";
@@ -99,9 +81,9 @@ for($n=0; $n < $fieldCount; $n++){
 	//Change Field Names
 	$fname = "fn".$n;
 
-	if ($_POST[$fname] !== ""){
+	if ($_SESSION[$fname] !== ""){
 			
-		$recArray[0][$n] = $_POST[$fname];
+		$recArray[0][$n] = $_SESSION[$fname];
 			
 	}
 
@@ -109,16 +91,16 @@ for($n=0; $n < $fieldCount; $n++){
 	//Populate Enabled Array
 	$fname = "fne".$n;
 
-	if ($_POST[$fname] == "on"){
+	if ($_SESSION[$fname] == "on"){
 			
 		$enFields[$enFieldsID][0] = $n;
 
 		//Populate Owner Table 
 		$fname = "owntbl".$n;
 
-		if ($_POST[$fname] !== ""){
+		if ($_SESSION[$fname] !== ""){
 
-			$enFields[$enFieldsID][1] = $_POST[$fname];
+			$enFields[$enFieldsID][1] = $_SESSION[$fname];
 
 		}else{
 
@@ -128,7 +110,7 @@ for($n=0; $n < $fieldCount; $n++){
 
 		//Populate Data Type
 		$fname = "fdt".$n;
-		$enFields[$enFieldsID][2] = $_POST[$fname];
+		$enFields[$enFieldsID][2] = $_SESSION[$fname];
 
 		$enFieldsID++;
 			
@@ -140,7 +122,7 @@ for($n=0; $n < $fieldCount; $n++){
 	//Populate GL Accounts
 	$fname = "fngl".$n;
 
-	if ($_POST[$fname] == "on"){
+	if ($_SESSION[$fname] == "on"){
 			
 		$glFields[$glFieldsID] = $n;
 
@@ -195,37 +177,17 @@ $XML7footer='</'.$mObjStruct.'Set>'.'</Sync'.$mObjStruct.'>';
 
 
 
-$fileNo=0;
-$rStart = 1;
-$rEnd=1;
+
+$rStart = $_POST['start'];
+$rEnd= $_POST['end'];
+$fileNo= $rStart.'-'.$rEnd;
 $loading = true;
 $files;
 
-while($loading == true){
 
-	$fileNo++;
+
+	
 	$XMLcontent=" ";
-
-	if($_POST['opse'] == "on"){
-
-		$rEnd = $rStart + $opsn;
-
-
-		if($rEnd >= $recCount ){
-
-
-			$rEnd = $recCount;
-			$loading = false;
-
-		}
-	}else{
-			
-			
-		$rEnd = $recCount;
-		$loading = false;
-	}
-
-
 
 
 	for($i=$rStart; $i<$rEnd; $i++){
@@ -397,78 +359,6 @@ while($loading == true){
 
 
 	echo '<div> <div class="btnDownload">'.$opfn.$fileNo.'.xml<a href="'.'./PHP/'.$opfn.$fileNo.".php".'">'.'</a></div></div>';
-}
 
 
-
-$zip = new ZipArchive();
-$DOCUMENT_ROOT = './ZIP/'.$opfn.'.zip';
-$zip->open($DOCUMENT_ROOT, ZipArchive::OVERWRITE);
-foreach ($files as $file) {
-	$zip->addFile( './XML/'.$file,$file);
-}
-$zip->close();
-
-
-//Create Download Link PHP
-
-$PHPoutput=	'<?php '
-.'header(\'Content-disposition: attachment; filename='.$opfn.'.zip\');'
-.'header(\'Content-type: application/zip\');'
-.'readfile(\'.'.$DOCUMENT_ROOT.'\');'
-.'?>';
-
-
-
-$DOCUMENT_ROOT =  './PHP/'.$opfn.".php";
-$fd = fopen($DOCUMENT_ROOT, 'w');
-
-if(!$fd){
-
-
-	echo "Error Has Occured";
-
-}
-
-fwrite($fd, $PHPoutput);
-
-
-fclose($fd);
-
-
-echo '</fieldset></div><div class="column grid_4">
-<fieldset><legend>Download Archive</legend><div> <div class="btnDownloadArc">'.$opfn.'.zip <a href="'.'./PHP/'.$opfn.".php".'">'.'</a></div></div>';
-
-
-//Write Text Area
-
-?></fieldset>
-</div>
-<div class="column grid_4">
-<fieldset><legend>Post To Server</legend>
-<div class="postField"><label for="postLoc">Server Address:</label> <input
-	id="postLoc" type="text" /></div>
-<div class="postField"><label for="postLoc">Post Delay (Minutes):</label>
-<input id="postDelay" type="text" /></div>
-<div class="postField">
-
-
-<div id="btnPost">Post To Server</div>
-</div>
-</fieldset>
-</div>
-</div>
-
-
-
-
-<div title="Post Status"
-	id="msgPostStat"></div>
-
-
-<?php
-
-
-
-include_once('footer.inc');
 ?>

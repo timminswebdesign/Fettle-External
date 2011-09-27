@@ -112,6 +112,11 @@ $(document).ready(function(){
     });
     
     
+    $(".btnGenerate").button({
+        icons: {
+            primary: 'ui-icon-refresh'
+        }
+    });
     
     
     $(".btnDownload").button({
@@ -152,8 +157,11 @@ $(document).ready(function(){
         $('#uploadForm').submit();
     });
     
+    $('#btnContinue').click(function(){
+        $('#optionForm').submit();
+    });
     
-    $(".btnDownload").click(function(){
+    $(".btnDownload").live('click',function(){
     
     
         document.location = $(this).children("span").children("a").attr("href");
@@ -259,6 +267,46 @@ $(document).ready(function(){
         
         
     });
+    
+    
+    
+    
+    $(".btnGenerate").click(function(){
+    
+        var id = $(this).attr("id");
+        id = id.replace('gen', '');
+        var start = $('#start' + id).val();
+        var end = $('#end' + id).val();
+        
+        
+        $.ajax({
+            type: "POST",
+            url: "./generateXML.php",
+            data: {
+                'start': start,
+                'end': end
+            },
+            success: function(data){
+            
+                $('#dlLinks').append(data);
+               
+			   
+			    $(".btnDownload").button({
+                    icons: {
+                        primary: 'ui-icon-circle-arrow-s'
+                    }
+                });
+                
+            }
+            
+            
+        });
+        
+        
+        
+    });
+    
+    
     
     
     
