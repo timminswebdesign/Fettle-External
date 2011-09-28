@@ -140,6 +140,10 @@ fieldset{
 	background-image:url('../images/tick.png');
 }
 
+.waiting{
+	background-image:url('../images/waiting.gif');
+}
+
 .notvalid{
 	background-image:url('../images/cross.png');
 }
@@ -263,7 +267,10 @@ fieldset{
 }
 
 .btnDownload{
-	margin-top:3px;
+	width:100%;
+}
+.btnGenerate{
+	width:100%;
 }
 
 

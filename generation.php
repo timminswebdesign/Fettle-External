@@ -25,62 +25,72 @@ foreach($_POST as $k=>$v) {
 </div>
 
 <div class="row">
-<div class="column grid_4">
-<fieldset><legend>Generate Files</legend> <?php
+<div class="column grid_8">
 
-$recCount = $_SESSION['recCount'];
-$opsn = $_SESSION['opsn'];
-$curCount = 1;
-$i = 1;
+<table id="tblGen">
+	<thead>
+		<tr>
+			<th>Generate</th>
+			<th>Status</th>
+			<th>Link</th>
+	
+	</thead>
+	</tr>
+	<tbody>
+	<?php
 
-if($_POST['opse'] == "on"){
+	$recCount = $_SESSION['recCount'];
+	$opsn = $_SESSION['opsn'];
+	$curCount = 1;
+	$i = 1;
 
-	while($curCount !== $recCount){
 
-		echo '<div class="btnGenerate" id="gen'.$i.'">';
 
-		echo '<input type="hidden" id="start'.$i.'" value="'.$curCount.'"/>';
-		
-		echo 'Generate Rows '.$curCount;
-		
+	if($_POST['opse'] == "on"){
+
+		while($curCount !== $recCount){
+
+
+			echo '<tr><td style="width:250px;"><div class="btnGenerate" id="gen'.$i.'">';
+
+			echo '<input type="hidden" id="start'.$i.'" value="'.$curCount.'"/>';
+
+			echo 'Generate Rows '.$curCount;
+
 			$curCount = $curCount + $opsn;
 
-		if($curCount > $recCount){
+			if($curCount > $recCount){
 
-			$curCount = $recCount;
+				$curCount = $recCount;
+
+			}
+
+			echo ' to '.$curCount;
+
+			echo '<input type="hidden" id="end'.$i.'" value="'.$curCount.'"/>';
+
+			echo "</td>";
+			echo "<td style='width:40px;'><div class=\"valImg\" id=\"geni".$i."\"></div></td>";
+			echo "<td id='dl".$i."'></td></tr></div>";
+			$i++;
 
 		}
-		
-		echo ' to '.$curCount;
-			
-		echo '<input type="hidden" id="end'.$i.'" value="'.$curCount.'"/>';
 
+	}else{
+
+		echo '<div class="btnGenerate" id="gen'.$i.'">Generate ';
+		echo '<input type="hidden" id="start'.$i.'" value="'.$curCount.'"/>';
+		echo '<input type="hidden" id="end'.$i.'" value="'.$recCount.'"/>';
 		echo "</div>";
-		$i++;
-
 	}
 
-}else{
-
-	echo '<div class="btnGenerate" id="gen'.$i.'">';
-	echo '<input type="hidden" id="start'.$i.'" value="'.$curCount.'"/>';
-	echo '<input type="hidden" id="end'.$i.'" value="'.$recCount.'"/>';
-	echo "</div>";
-}
-
-?></fieldset>
+	?>
+	</tbody>
+</table>
+<div class="btnGenerate" id="genALL">Generate All</div>
 </div>
 
 
-<div class="column grid_4">
-<fieldset><legend>Download Link</legend>
-
-<div id="dlLinks">
-
-</div>
-
-</fieldset>
-</div>
 
 
 <div class="column grid_4">
@@ -102,12 +112,13 @@ if($_POST['opse'] == "on"){
 
 
 
-<div title="Post Status" id="msgPostStat"></div>
+<div title="Post Status"
+	id="msgPostStat"></div>
 
 
-<?php
+	<?php
 
 
 
-include_once('footer.inc');
+	include_once('footer.inc');
 ?>

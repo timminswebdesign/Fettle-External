@@ -44,6 +44,8 @@ function compare($x, $y) {
 
 
 
+//Set Properties
+
 $recArray =  $_SESSION['recArray'];
 $mVer = $_SESSION['mVer'];
 $mOp  = $_SESSION['mOp'];
@@ -53,7 +55,6 @@ $defOwner = $_SESSION['defOwner'];
 
 $mPubChan = $_SESSION['mPubChan'];
 $mObjStruct = $_SESSION['mObjStruct'];
-
 
 
 //Maximo 6
@@ -76,16 +77,15 @@ $glFields;
 $glFieldsID =0;
 
 
+$rStart = $_POST['start'];
+$rEnd= $_POST['end'];
+$fileNo= $rStart.'-'.$rEnd;
+$loading = true;
+$files;
+
+
+
 for($n=0; $n < $fieldCount; $n++){
-
-	//Change Field Names
-	$fname = "fn".$n;
-
-	if ($_SESSION[$fname] !== ""){
-			
-		$recArray[0][$n] = $_SESSION[$fname];
-			
-	}
 
 
 	//Populate Enabled Array
@@ -95,7 +95,17 @@ for($n=0; $n < $fieldCount; $n++){
 			
 		$enFields[$enFieldsID][0] = $n;
 
-		//Populate Owner Table 
+		//Change Field Names
+		
+		$fname = "fn".$n;
+
+		if ($_SESSION[$fname] !== ""){
+				
+			$recArray[0][$n] = $_SESSION[$fname];
+				
+		}
+
+		//Populate Owner Table
 		$fname = "owntbl".$n;
 
 		if ($_SESSION[$fname] !== ""){
@@ -108,35 +118,49 @@ for($n=0; $n < $fieldCount; $n++){
 
 		}
 
-		//Populate Data Type
+
+		//Convert Dates
+
 		$fname = "fdt".$n;
-		$enFields[$enFieldsID][2] = $_SESSION[$fname];
+
+		if($_SESSION[$fname] == "DATETIME" || $_SESSION[$fname] == "DATE" ){
+				
+			for($d=$rStart; $d<$rEnd;$d++){
+					
+				if($recArray[$d][$n] !==""){
+
+					$recArray[$d][$n] = date(DATE_W3C, strtotime(str_replace('/','-',$recArray[$d][$n])));
+
+				}
+			}
+
+		}
+
+
+		//Convert GL Accounts
+
+		$fname = "fngl".$n;
+
+		if ($_SESSION[$fname] == "on"){
+
+			for($s=0; $s<$rEnd; $s++){
+
+				$recArray[$s][$n] = fnGLformat($recArray[$s][$n]);
+
+			}
+
+		}
+
 
 		$enFieldsID++;
 			
 	}
 
 
-
-
-	//Populate GL Accounts
-	$fname = "fngl".$n;
-
-	if ($_SESSION[$fname] == "on"){
-			
-		$glFields[$glFieldsID] = $n;
-
-		$glFieldsID++;
-			
-	}
-
-
-
-
 }
 
-$fieldCount =count($enFields);
-$glCount =count($glFields);
+$fieldCount=count($enFields);
+$glCount=count($glFields);
 
 //Sort Enables Fields Array
 
@@ -168,197 +192,167 @@ $XML7header  ='<?xml version="1.0"?><Sync'.$mObjStruct.' creationDateTime="2010-
 $XML7footer='</'.$mObjStruct.'Set>'.'</Sync'.$mObjStruct.'>';
 
 
-
-
-
-
 //Create Content
 
+$XMLcontent=" ";
+
+
+//Start Main Loop
+
+for($i=$rStart; $i<$rEnd; $i++){
+
+
+
+	//Form Record Header
+
+	if($mVer == '7'){
+
+		$XMLcontent.=	"<".$defOwner." action=\"".$mOp."\">\n";
+
+
+	}else{
+
+		$XMLcontent.= "<".$m6IntObj.">\n\t";
+		$XMLcontent.=	"<".$defOwner." action=\"".$mOp."\">\n";
+
+	}
 
 
 
 
-$rStart = $_POST['start'];
-$rEnd= $_POST['end'];
-$fileNo= $rStart.'-'.$rEnd;
-$loading = true;
-$files;
+	for($r=0; $r<$fieldCount; $r++){
 
 
+		//Remove Tag if Null Value
+		if($oprnt == "on" && $recArray[$i][$enFields[$r][0]] == ""){
 
-	
-	$XMLcontent=" ";
-
-
-	for($i=$rStart; $i<$rEnd; $i++){
-
-
-		for($s=0; $s<$glCount; $s++){
-
-
-			$recArray[$i][$glFields[$s]] = fnGLformat($recArray[$i][$glFields[$s]]);
-
-		}
-
-
-		if($mVer == '7'){
-
-			$XMLcontent.=	"<".$defOwner." action=\"".$mOp."\">\n";
 
 
 		}else{
 
-			$XMLcontent.= "<".$m6IntObj.">\n\t";
-			$XMLcontent.=	"<".$defOwner." action=\"".$mOp."\">\n";
-
-		}
+			if($defOwner !== $enFields[$r][1]){
 
 
+				if($enFields[$r][1] !== $enFields[$r-1][1]){
 
-
-		for($r=0; $r<$fieldCount; $r++){
-
-				//Convert Dates
-
-				
-
-				if($enFields[$r][2] == "DATETIME" || $enFields[$r][2] == "DATE" ){
-
-					for($d=1;$d<=$recCount;$d++){
-						
-						if($recArray[$d][$enFields[$r][0]] !==""){
-						
-						$recArray[$d][$enFields[$r][0]] = date(DATE_W3C, strtotime(str_replace('/','-',$recArray[$d][$enFields[$r][0]])));
-						
-						}
-					}
+					$XMLcontent.= "\t<".$enFields[$r][1].">\n";
 
 				}
-			//Remove Tag if Null Value
-			if($oprnt == "on" && $recArray[$i][$enFields[$r][0]] == ""){
+
+
+
+				$XMLcontent.="\t\t<".$recArray[0][$enFields[$r][0]].">".$recArray[$i][$enFields[$r][0]]. "</".$recArray[0][$enFields[$r][0]].">\n";
+
+
+				if($enFields[$r][1] !== $enFields[$r+1][1]){
+
+					$XMLcontent.= "\t</".$enFields[$r][1].">\n";
+
+				}
+
 
 
 
 			}else{
 
-				if($defOwner !== $enFields[$r][1]){
+				//Format Fields
+				$XMLcontent.="\t\t<".$recArray[0][$enFields[$r][0]].">".$recArray[$i][$enFields[$r][0]]. "</".$recArray[0][$enFields[$r][0]].">\n";
 
-
-					if($enFields[$r][1] !== $enFields[$r-1][1]){
-
-						$XMLcontent.= "\t<".$enFields[$r][1].">\n";
-
-					}
-
-
-
-					$XMLcontent.="\t\t<".$recArray[0][$enFields[$r][0]].">".$recArray[$i][$enFields[$r][0]]. "</".$recArray[0][$enFields[$r][0]].">\n";
-
-
-					if($enFields[$r][1] !== $enFields[$r+1][1]){
-
-						$XMLcontent.= "\t</".$enFields[$r][1].">\n";
-
-					}
-
-
-
-
-				}else{
-
-					//Format Fields
-					$XMLcontent.="\t\t<".$recArray[0][$enFields[$r][0]].">".$recArray[$i][$enFields[$r][0]]. "</".$recArray[0][$enFields[$r][0]].">\n";
-
-				}
-					
-					
 			}
-			$rStart=$i+1;
-		}
 
-
-		if($mVer == '7'){
-
-			$XMLcontent.= "\t</".$defOwner.">\n";
-
-
-		}else{
-
-			$XMLcontent.= "\t</".$defOwner.">\n</".$m6IntObj.">\n";
 
 		}
-
-
-
-
+		$rStart=$i+1;
 	}
 
-	//Form Output
+
+	//Form Record Footer
 
 	if($mVer == '7'){
 
-		$XMLoutput =  $XML7header.$XMLcontent.$XML7footer;
+		$XMLcontent.= "\t</".$defOwner.">\n";
+
 
 	}else{
 
-		$XMLoutput =  $XML6header.$XMLcontent.$XML6footer;
+		$XMLcontent.= "\t</".$defOwner.">\n</".$m6IntObj.">\n";
 
 	}
 
 
 
-	//Write Output File
 
-	$DOCUMENT_ROOT =  './XML/'.$opfn.$fileNo.".xml";
-	$files[$fileNo] = $opfn.$fileNo.".xml";
+}
 
-	$fp = fopen($DOCUMENT_ROOT, 'w');
+//End Main Loop
 
 
-	if(!$fp){
+//Form Output
 
+if($mVer == '7'){
 
-		echo "Error Has Occured";
+	$XMLoutput =  $XML7header.$XMLcontent.$XML7footer;
 
-	}
+}else{
 
-	fwrite($fp, $XMLoutput);
+	$XMLoutput =  $XML6header.$XMLcontent.$XML6footer;
 
-
-	fclose($fp);
+}
 
 
 
-	//Create Download Link PHP
+//Write Output File
 
-	$PHPoutput=	'<?php '
-	.'header(\'Content-disposition: attachment; filename='.$opfn.$fileNo.'.xml\');'
-	.'header(\'Content-type: text/xml\');'
-	.'readfile(\'.'.$DOCUMENT_ROOT.'\');'
-	.'?>';
+$DOCUMENT_ROOT =  './XML/'.$opfn.$fileNo.".xml";
+$files[$fileNo] = $opfn.$fileNo.".xml";
 
+$fp = fopen($DOCUMENT_ROOT, 'w');
 
 
-	$DOCUMENT_ROOT =  './PHP/'.$opfn.$fileNo.".php";
-	$fd = fopen($DOCUMENT_ROOT, 'w');
-
-	if(!$fd){
-			
-			
-		echo "Error Has Occured";
-			
-	}
-
-	fwrite($fd, $PHPoutput);
+if(!$fp){
 
 
-	fclose($fd);
+	echo "Error Has Occured";
+
+}
+
+fwrite($fp, $XMLoutput);
+
+
+fclose($fp);
 
 
 
+//Create Download Link PHP
+
+$PHPoutput=	'<?php '
+.'header(\'Content-disposition: attachment; filename='.$opfn.$fileNo.'.xml\');'
+.'header(\'Content-type: text/xml\');'
+.'readfile(\'.'.$DOCUMENT_ROOT.'\');'
+.'?>';
 
 
-	echo '<div> <div class="btnDownload">'.$opfn.$fileNo.'.xml<a href="'.'./PHP/'.$opfn.$fileNo.".php".'">'.'</a></div></div>';
+
+$DOCUMENT_ROOT =  './PHP/'.$opfn.$fileNo.".php";
+$fd = fopen($DOCUMENT_ROOT, 'w');
+
+if(!$fd){
+
+
+	echo "Error Has Occured";
+
+}
+
+fwrite($fd, $PHPoutput);
+
+
+fclose($fd);
+
+
+
+
+
+echo '<div> <div class="btnDownload">'.$opfn.$fileNo.'.xml<a href="'.'./PHP/'.$opfn.$fileNo.".php".'">'.'</a></div></div>';
 
 
 ?>

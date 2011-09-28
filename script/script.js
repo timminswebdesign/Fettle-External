@@ -21,6 +21,12 @@ $(document).ready(function(){
         "sDom": '<"H"f>t<"F"ir>'
     });
     
+    $("#tblGen").dataTable({
+        "bJQueryUI": true,
+        "bSort": false,
+        "sDom": 't'
+    });
+    
     //Modal Load
     $("#btnUpload").click(function(){
         $("#loadModal").show();
@@ -161,7 +167,7 @@ $(document).ready(function(){
         $('#optionForm').submit();
     });
     
-    $(".btnDownload").live('click',function(){
+    $(".btnDownload").live('click', function(){
     
     
         document.location = $(this).children("span").children("a").attr("href");
@@ -273,34 +279,29 @@ $(document).ready(function(){
     
     $(".btnGenerate").click(function(){
     
+    
+    
         var id = $(this).attr("id");
         id = id.replace('gen', '');
-        var start = $('#start' + id).val();
-        var end = $('#end' + id).val();
         
+        if (id == 'ALL') {
         
-        $.ajax({
-            type: "POST",
-            url: "./generateXML.php",
-            data: {
-                'start': start,
-                'end': end
-            },
-            success: function(data){
+            $(".btnGenerate").each(function(){
             
-                $('#dlLinks').append(data);
-               
-			   
-			    $(".btnDownload").button({
-                    icons: {
-                        primary: 'ui-icon-circle-arrow-s'
-                    }
-                });
+                id = $(this).attr("id");
+                id = id.replace('gen', '');
+                generateFiles(id);
                 
-            }
+                
+            });
             
-            
-        });
+        }
+        else {
+        
+         generateFiles(id);
+        
+        }
+        
         
         
         
@@ -312,6 +313,42 @@ $(document).ready(function(){
     
     
 });
+
+function generateFiles(id){
+
+    var start = $('#start' + id).val();
+    var end = $('#end' + id).val();
+    $('#dl' + id).html(" ");
+    $('#geni' + id).addClass("waiting");
+    
+    $.ajax({
+        type: "POST",
+        url: "./generateXML.php",
+        data: {
+            'start': start,
+            'end': end
+        },
+        success: function(data){
+        
+            $('#dl' + id).append(data);
+            
+            
+            $(".btnDownload").button({
+                icons: {
+                    primary: 'ui-icon-circle-arrow-s'
+                }
+            });
+            
+            $('#geni' + id).removeClass("waiting");
+            $('#geni' + id).addClass("valid");
+            
+        }
+        
+        
+    });
+    
+    
+}
 
 
 
