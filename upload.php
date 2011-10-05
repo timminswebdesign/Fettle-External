@@ -42,7 +42,7 @@ if (($handle = fopen($upfile, "r")) !== FALSE) {
 		$num = count($data);
 			
 		for ($c=0; $c < $num; $c++) {
-			$recArray[$row][$c] = htmlspecialchars($data[$c]);
+			$recArray[$row][$c] = htmlspecialchars($data[$c],ENT_QUOTES);
 
 		}
 			

@@ -6,6 +6,10 @@
     font-size: 10px;
 }
 
+body{
+	background-color:#E5EBF0;
+}
+
 
 .nomarg {
     margin-bottom: 0px;
@@ -189,36 +193,11 @@ table {
     border-collapse: collapse;
 }
 
-.tblPreview td {
+ td {
     border: 1px solid black;
     vertical-align: top;
 }
 
-.tblMap td {
-    border: 1px solid black;
-    vertical-align: top;
-}
-
-.tblAddCol td {
-    border: 1px solid black;
-    vertical-align: top;
-}
-
-.tblXMLop td {
-    border: 1px solid black;
-    vertical-align: top;
-}
-
-.trTitle {
-    background-color: #B2DFEE;
-}
-
-
-
-
-.tblPart2 tr td {
-    vertical-align: top;
-}
 
 .tdOpt {
     width: 100%;
